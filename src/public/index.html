@@ -4,142 +4,122 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Control Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body {
-  margin:0; padding:0;
-  font-family: 'Roboto', sans-serif;
-  background: #f0f2f5;
-}
-header {
-  background: #4A90E2;
-  color: white;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 25px;
-}
-.device-card {
-  background:white;
-  border-radius: 15px;
-  padding:20px;
-  text-align:center;
-  box-shadow:0 6px 20px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.device-card:hover {
-  transform: translateY(-5px);
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-.device-card img {
-  width:60px;
-  height:60px;
-  margin-bottom:15px;
-}
-.device-name {
-  font-weight:700;
-  font-size:1.2em;
-  margin-bottom:10px;
-}
-.status {
-  font-weight:600;
-  margin-bottom:15px;
-  padding:5px 10px;
-  border-radius: 12px;
-  display:inline-block;
-  color:white;
-}
-.status.online { background:#4CAF50; }
-.status.offline { background:#F44336; }
-.status.locked { background:#FF9800; }
-button {
-  padding:10px 15px;
-  margin:5px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-  transition: 0.2s;
-}
-button.lock { background:#F44336; color:white; }
-button.lock:hover { background:#D32F2F; }
-button.unlock { background:#4CAF50; color:white; }
-button.unlock:hover { background:#388E3C; }
-
-@media(max-width:600px){
-  .container { grid-template-columns: 1fr; }
-}
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #001a12;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  header {
+    padding: 1rem 2rem;
+    background: linear-gradient(90deg, #00FF88, #00FFA3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0,255,136,0.5);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px #00FF88;
+  }
+  header .user {
+    font-size: 1rem;
+  }
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+  }
+  .device-card {
+    background: #002218;
+    border: 1px solid #00FF88;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 0 15px rgba(0,255,136,0.3);
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .device-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0,255,136,0.6);
+  }
+  .device-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px #00FF88;
+  }
+  .status {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  .status.online { color: #00FF88; }
+  .status.offline { color: #FF4C4C; }
+  .status.locked { color: #FFA500; }
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 0.5rem;
+    transition: all 0.2s;
+  }
+  .btn.lock { background: #FF4C4C; color: #fff; }
+  .btn.unlock { background: #00FF88; color: #001a12; }
+  .btn:hover { opacity: 0.8; }
+  footer {
+    padding: 1rem 2rem;
+    text-align: center;
+    background: #000f05;
+    border-top: 1px solid #00FF88;
+    box-shadow: 0 -2px 15px rgba(0,255,136,0.3);
+  }
 </style>
 </head>
 <body>
-
 <header>
   <h1>Family Control Dashboard</h1>
-  <p style="font-weight:400; font-size:0.9em;">Realtime monitoring & control</p>
+  <div class="user">Logged in as Parent</div>
 </header>
 
-<div class="container" id="devices">
-  <!-- Device cards muncul di sini -->
-</div>
+<main class="dashboard">
+  <!-- Contoh Device Card -->
+  <div class="device-card">
+    <h3>Child Device 1</h3>
+    <div class="status online">Online</div>
+    <button class="btn lock">Lock</button>
+    <button class="btn unlock">Unlock</button>
+  </div>
 
-<script src="/socket.io/socket.io.js"></script>
+  <div class="device-card">
+    <h3>Child Device 2</h3>
+    <div class="status offline">Offline</div>
+    <button class="btn lock">Lock</button>
+    <button class="btn unlock">Unlock</button>
+  </div>
+
+  <div class="device-card">
+    <h3>Child Device 3</h3>
+    <div class="status locked">Locked</div>
+    <button class="btn lock">Lock</button>
+    <button class="btn unlock">Unlock</button>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 Family Control. All rights reserved.
+</footer>
+
 <script>
-const socket = io()
-const container = document.getElementById('devices')
-
-// Load device dari backend
-async function loadDevices(){
-  const res = await fetch('/api/device')
-  const devices = await res.json()
-  container.innerHTML = ''
-  devices.forEach(d => {
-    const card = document.createElement('div')
-    card.className = 'device-card'
-    card.id = d.device_id
-
-    let statusClass = d.status.toLowerCase()
-    if(statusClass !== 'online' && statusClass !== 'offline') statusClass='locked'
-
-    card.innerHTML = `
-      <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Device Icon"/>
-      <div class="device-name">${d.device_name}</div>
-      <div class="status ${statusClass}">${d.status}</div>
-      <div>
-        <button class="lock" onclick="sendCommand('${d.device_id}','LOCK')">Lock</button>
-        <button class="unlock" onclick="sendCommand('${d.device_id}','UNLOCK')">Unlock</button>
-      </div>
-    `
-    container.appendChild(card)
-  })
-}
-
-// Kirim command ke backend
-async function sendCommand(device_id, command){
-  await fetch('/api/control/send', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ device_id, command, data:{} })
-  })
-}
-
-// Socket realtime update
-socket.on('command', data=>{
-  const card = document.getElementById(data.device_id)
-  if(card){
-    let statusEl = card.querySelector('.status')
-    statusEl.innerText = data.command
-    statusEl.className = 'status ' + (data.command.toLowerCase()==='unlock'?'online':'locked')
-  }
-})
-
-// Load device pertama kali
-loadDevices()
+  // Contoh dummy interaksi tombol
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert(`Tombol ${btn.textContent} ditekan! (realtime belum terpasang)`);
+    });
+  });
 </script>
-
 </body>
 </html>

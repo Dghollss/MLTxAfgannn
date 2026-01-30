@@ -1,0 +1,15 @@
+const express = require('express');
+const http = require('http');
+const app = require('./app');
+const { initSocket } = require('./sockets/realtime');
+
+const server = http.createServer(app);
+
+// Inisialisasi Socket.io
+initSocket(server);
+
+const PORT = 5000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});9
+
