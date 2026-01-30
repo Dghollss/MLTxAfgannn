@@ -1,0 +1,23 @@
+📁 family-guard-app (Ini folder utamanya)
+├── 📄 index.html
+├── 📄 index.tsx
+├── 📄 App.tsx
+├── 📄 package.json
+├── 📄 vite.config.ts
+├── 📄 vercel.json
+├── 📄 types.ts
+├── 📄 constants.tsx
+├── 📄 metadata.json
+├── 📄 types.ts
+├── 📁 services/
+│   └── 📄 geminiService.ts
+└── 📁 components/
+    ├── 📄 Sidebar.tsx
+    ├── 📄 DeviceCard.tsx
+    ├── 📄 UsagePanel.tsx
+    ├── 📄 ChatPanel.tsx
+    ├── 📄 ChildView.tsx
+    ├── 📄 LoginView.tsx
+    ├── 📄 SettingsPanel.tsx
+    ├── 📄 AddDeviceModal.tsx
+    └── 📄 MonitoringModal.tsx
