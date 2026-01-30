@@ -1,0 +1,26 @@
+const db = require('../config/DB')
+
+class User {
+  constructor({ email, password, role }) {
+    this.email = email
+    this.password = password
+    this.role = role
+    this.id = Date.now().toString()
+  }
+
+  async save() {
+    await db.read()
+    db.data.parents.push(this)
+    await db.write()
+    return this
+  }
+
+  static async findOne(query) {
+    await db.read()
+    return db.data.parents.find(user => 
+      user.email === query.email && user.password === query.password
+    )
+  }
+}
+
+module.exports = User

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Control Dashboard</title>
+  <style>
+    body { font-family: Arial; background: #f4f6f8; margin:0; padding:0; }
+    header { background:#4A90E2; color:white; padding:20px; text-align:center; }
+    .container { display:flex; flex-wrap:wrap; justify-content:center; padding:20px; }
+    .device-card { background:white; border-radius:10px; padding:20px; margin:10px; width:200px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+    .device-card.online { border: 2px solid #4CAF50; }
+    .device-card.offline { border: 2px solid #F44336; }
+    .device-card img { width:50px; height:50px; margin-bottom:10px; }
+    button { padding:10px 15px; margin-top:10px; border:none; border-radius:5px; cursor:pointer; }
+    button.lock { background:#F44336; color:white; }
+    button.unlock { background:#4CAF50; color:white; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Family Control Dashboard</h1>
+</header>
+
+<div class="container" id="devices">
+  <!-- Device cards akan muncul di sini -->
+</div>
+
+<script>
+  // Contoh data device
+  const devices = [
+    {device_name:"HP Anak 1", status:"online"},
+    {device_name:"HP Anak 2", status:"offline"},
+    {device_name:"HP Anak 3", status:"online"},
+  ];
+
+  const container = document.getElementById('devices');
+  devices.forEach(d => {
+    const card = document.createElement('div');
+    card.className = `device-card ${d.status}`;
+    card.innerHTML = `
+      <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" />
+      <h3>${d.device_name}</h3>
+      <p>Status: ${d.status}</p>
+      <button class="lock" onclick="alert('Lock command sent to ${d.device_name}')">Lock</button>
+      <button class="unlock" onclick="alert('Unlock command sent to ${d.device_name}')">Unlock</button>
+    `;
+    container.appendChild(card);
+  });
+</script>
+
+</body>
+</html>

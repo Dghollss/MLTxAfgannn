@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Control Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0; padding:0;
+  font-family: 'Roboto', sans-serif;
+  background: #f0f2f5;
+}
+header {
+  background: #4A90E2;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 25px;
+}
+.device-card {
+  background:white;
+  border-radius: 15px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.device-card:hover {
+  transform: translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+.device-card img {
+  width:60px;
+  height:60px;
+  margin-bottom:15px;
+}
+.device-name {
+  font-weight:700;
+  font-size:1.2em;
+  margin-bottom:10px;
+}
+.status {
+  font-weight:600;
+  margin-bottom:15px;
+  padding:5px 10px;
+  border-radius: 12px;
+  display:inline-block;
+  color:white;
+}
+.status.online { background:#4CAF50; }
+.status.offline { background:#F44336; }
+.status.locked { background:#FF9800; }
+button {
+  padding:10px 15px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition: 0.2s;
+}
+button.lock { background:#F44336; color:white; }
+button.lock:hover { background:#D32F2F; }
+button.unlock { background:#4CAF50; color:white; }
+button.unlock:hover { background:#388E3C; }
+
+@media(max-width:600px){
+  .container { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Family Control Dashboard</h1>
+  <p style="font-weight:400; font-size:0.9em;">Realtime monitoring & control</p>
+</header>
+
+<div class="container" id="devices">
+  <!-- Device cards muncul di sini -->
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io()
+const container = document.getElementById('devices')
+
+// Load device dari backend
+async function loadDevices(){
+  const res = await fetch('/api/device')
+  const devices = await res.json()
+  container.innerHTML = ''
+  devices.forEach(d => {
+    const card = document.createElement('div')
+    card.className = 'device-card'
+    card.id = d.device_id
+
+    let statusClass = d.status.toLowerCase()
+    if(statusClass !== 'online' && statusClass !== 'offline') statusClass='locked'
+
+    card.innerHTML = `
+      <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Device Icon"/>
+      <div class="device-name">${d.device_name}</div>
+      <div class="status ${statusClass}">${d.status}</div>
+      <div>
+        <button class="lock" onclick="sendCommand('${d.device_id}','LOCK')">Lock</button>
+        <button class="unlock" onclick="sendCommand('${d.device_id}','UNLOCK')">Unlock</button>
+      </div>
+    `
+    container.appendChild(card)
+  })
+}
+
+// Kirim command ke backend
+async function sendCommand(device_id, command){
+  await fetch('/api/control/send', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ device_id, command, data:{} })
+  })
+}
+
+// Socket realtime update
+socket.on('command', data=>{
+  const card = document.getElementById(data.device_id)
+  if(card){
+    let statusEl = card.querySelector('.status')
+    statusEl.innerText = data.command
+    statusEl.className = 'status ' + (data.command.toLowerCase()==='unlock'?'online':'locked')
+  }
+})
+
+// Load device pertama kali
+loadDevices()
+</script>
+
+</body>
+</html>
